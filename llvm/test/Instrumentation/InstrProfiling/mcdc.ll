@@ -12,7 +12,7 @@ target triple = "x86_64-unknown-linux-gnu"
 
 define dso_local void @test(i32 noundef %A) {
 entry:
-  ; RELOC: %profbm_bias = load i64, ptr @__llvm_profile_bitmap_bias, align [[#]], !invariant.load !0
+  ; RELOC: %profbm_bias = load i64, ptr @__llvm_profile_bitmap_bias, align [[#]], !invariant.load !{{[0-9]+}}
   ; RELOC: %profc_bias = load i64, ptr @__llvm_profile_counter_bias, align [[#]]
   %A.addr = alloca i32, align 4
   %mcdc.addr = alloca i32, align 4
