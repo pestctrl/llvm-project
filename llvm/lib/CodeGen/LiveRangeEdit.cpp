@@ -194,9 +194,13 @@ SlotIndex LiveRangeEdit::rematerializeAt(MachineBasicBlock &MBB,
   Rematted.insert(RM.ParentVNI);
   ++NumReMaterialization;
 
-  if (ReplaceIndexMI)
-    return LIS.ReplaceMachineInstrInMaps(*ReplaceIndexMI, *MI).getRegSlot();
-  return LIS.getSlotIndexes()->insertMachineInstrInMaps(*MI, Late).getRegSlot();
+  SlotIndex NewIndex =
+      ReplaceIndexMI
+          ? LIS.ReplaceMachineInstrInMaps(*ReplaceIndexMI, *MI)
+          : LIS.getSlotIndexes()->insertMachineInstrInMaps(*MI, Late);
+
+  const MachineOperand &MO = *MI->findRegisterDefOperand(DestReg, &tri);
+  return NewIndex.getRegSlot(MO.isEarlyClobber());
 }
 
 void LiveRangeEdit::eraseVirtReg(Register Reg) {
